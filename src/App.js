@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import About from './pages/About';
+import Chat from './pages/Chat';
+import Login from './pages/Login';
+import Error from './pages/error-page'
+import Layout from './components/Layout';
+import Registration from './pages/Registration';
+import { Context } from './index';
+import { observer } from 'mobx-react-lite';
+
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const { store } = useContext(Context);
+	return (
+		<>
+			<Routes>
+				<Route path="/" element={<Layout />}>
+					{store.isAuth
+						?
+						<>
+							<Route index element={<About />}></Route>
+							<Route path='chat' element={<Chat />}></Route>
+							<Route path='*' element={<Error />}></Route>
+						</>
+						:
+						<>
+							<Route index element={<About />}></Route>
+							<Route path='login' element={<Login />}></Route>
+							<Route path='registration' element={<Registration />}></Route>
+							<Route path='*' element={<Error />}></Route>
+						</>
+					}
+				</Route>
+			</Routes>
+		</>
+	);
 }
 
-export default App;
+export default observer(App);
